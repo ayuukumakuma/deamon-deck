@@ -1,4 +1,4 @@
-import type { JSX, MouseEvent } from "react";
+import type { MouseEvent, ReactElement } from "react";
 import { type ActionName, useServiceAction } from "../../hooks/useServiceAction";
 import { useTranslation } from "../../lib/i18n";
 import type { Service, ServiceStatus } from "../../lib/types";
@@ -17,7 +17,7 @@ function Spinner() {
   );
 }
 
-const ICON_MAP: Record<ActionName, () => JSX.Element> = {
+const ICON_MAP: Record<ActionName, () => ReactElement> = {
   start: PlayIcon,
   stop: StopIcon,
   restart: RestartIcon,
