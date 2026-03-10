@@ -16,7 +16,8 @@ pub fn run() {
         .setup(|app| {
             #[cfg(target_os = "macos")]
             if let Some(window) = app.get_webview_window("main") {
-                if let Err(e) = apply_vibrancy(&window, NSVisualEffectMaterial::Sidebar, None, None) {
+                if let Err(e) = apply_vibrancy(&window, NSVisualEffectMaterial::Sidebar, None, None)
+                {
                     eprintln!("Warning: failed to apply vibrancy: {e}");
                 }
             }

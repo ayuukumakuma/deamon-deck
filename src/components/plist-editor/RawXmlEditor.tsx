@@ -20,7 +20,7 @@ export function RawXmlEditor({ document, onChange }: RawXmlEditorProps) {
   const [parseError, setParseError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [lineWrap, setLineWrap] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const suppressSyncRef = useRef(false);
 
   useEffect(() => {

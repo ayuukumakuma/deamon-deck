@@ -37,9 +37,7 @@ fn get_string_array(dict: &plist::Dictionary, key: &str) -> Option<Vec<String>> 
 }
 
 fn get_bool(dict: &plist::Dictionary, key: &str) -> bool {
-    dict.get(key)
-        .and_then(|v| v.as_boolean())
-        .unwrap_or(false)
+    dict.get(key).and_then(|v| v.as_boolean()).unwrap_or(false)
 }
 
 fn parse_plist_file(path: &std::path::Path) -> Option<Service> {
@@ -181,14 +179,13 @@ fn build_service_list() -> Result<Vec<Service>, AppError> {
     for service in &mut services {
         if let Some(entry) = launchctl_map.get(&service.label) {
             match entry {
-                LaunchctlEntry {
-                    pid: Some(pid), ..
-                } => {
+                LaunchctlEntry { pid: Some(pid), .. } => {
                     service.status = ServiceStatus::Running;
                     service.pid = Some(*pid);
                 }
                 LaunchctlEntry {
-                    exit_status, pid: None,
+                    exit_status,
+                    pid: None,
                 } if *exit_status != 0 => {
                     service.status = ServiceStatus::Error;
                     service.last_exit_status = Some(*exit_status);

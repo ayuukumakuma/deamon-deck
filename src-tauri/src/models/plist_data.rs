@@ -85,8 +85,9 @@ impl From<PlistValue> for plist::Value {
             ),
             PlistValue::Data(d) => plist::Value::Data(d),
             PlistValue::Date(d) => {
-                let date = plist::Date::from_xml_format(&d)
-                    .unwrap_or_else(|_| plist::Date::from_xml_format("2000-01-01T00:00:00Z").unwrap());
+                let date = plist::Date::from_xml_format(&d).unwrap_or_else(|_| {
+                    plist::Date::from_xml_format("2000-01-01T00:00:00Z").unwrap()
+                });
                 plist::Value::Date(date)
             }
         }

@@ -42,10 +42,7 @@ fn send_log_line(channel: &Channel<LogLine>, content: String, source: LogSource)
 
 /// Read the last `n` lines from a file by reading backwards in chunks.
 /// Returns a BufReader positioned at EOF for subsequent tailing.
-fn open_and_read_tail(
-    path: &str,
-    n: usize,
-) -> Option<(Vec<String>, BufReader<std::fs::File>)> {
+fn open_and_read_tail(path: &str, n: usize) -> Option<(Vec<String>, BufReader<std::fs::File>)> {
     let file = std::fs::File::open(path).ok()?;
     let file_size = file.metadata().ok()?.len();
 
@@ -119,18 +116,17 @@ async fn tail_file(
     // Set up notify watcher bridged via mpsc channel
     let (tx, mut rx) = tokio::sync::mpsc::channel::<()>(100);
     let tx_clone = tx.clone();
-    let mut watcher = match notify::recommended_watcher(
-        move |res: Result<notify::Event, notify::Error>| {
+    let mut watcher =
+        match notify::recommended_watcher(move |res: Result<notify::Event, notify::Error>| {
             if let Ok(event) = res {
                 if event.kind.is_modify() {
                     let _ = tx_clone.blocking_send(());
                 }
             }
-        },
-    ) {
-        Ok(w) => w,
-        Err(_) => return,
-    };
+        }) {
+            Ok(w) => w,
+            Err(_) => return,
+        };
 
     if watcher
         .watch(Path::new(&path), RecursiveMode::NonRecursive)
@@ -253,11 +249,7 @@ pub async fn start_log_stream(
             tauri::async_runtime::spawn(tail_file(path, LogSource::Stderr, ch, tk));
         }
     } else if let Some(proc_name) = process_name {
-        tauri::async_runtime::spawn(tail_log_stream(
-            proc_name,
-            on_event.clone(),
-            token.clone(),
-        ));
+        tauri::async_runtime::spawn(tail_log_stream(proc_name, on_event.clone(), token.clone()));
     } else {
         send_log_line(
             &on_event,

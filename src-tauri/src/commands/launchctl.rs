@@ -29,7 +29,10 @@ fn run_launchctl(args: &[&str]) -> Result<(), AppError> {
 }
 
 /// Tries `modern_args` first, falls back to `legacy_args` on failure.
-pub(crate) fn run_with_fallback(modern_args: &[&str], legacy_args: &[&str]) -> Result<(), AppError> {
+pub(crate) fn run_with_fallback(
+    modern_args: &[&str],
+    legacy_args: &[&str],
+) -> Result<(), AppError> {
     run_launchctl(modern_args).or_else(|_| run_launchctl(legacy_args))
 }
 
@@ -44,10 +47,7 @@ fn gui_domain() -> String {
 #[tauri::command]
 pub fn load_service(plist_path: String) -> Result<(), AppError> {
     let domain = gui_domain();
-    run_with_fallback(
-        &["bootstrap", &domain, &plist_path],
-        &["load", &plist_path],
-    )
+    run_with_fallback(&["bootstrap", &domain, &plist_path], &["load", &plist_path])
 }
 
 #[tauri::command]

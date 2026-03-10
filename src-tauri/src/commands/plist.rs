@@ -55,11 +55,41 @@ pub fn validate_plist(data: PlistDocument) -> Result<Vec<String>, AppError> {
         }
     }
 
-    check_type(&data, "ProgramArguments", |v| matches!(v, PlistValue::Array(_)), "an array", &mut errors);
-    check_type(&data, "StartInterval", |v| matches!(v, PlistValue::Integer(_)), "an integer", &mut errors);
-    check_type(&data, "RunAtLoad", |v| matches!(v, PlistValue::Boolean(_)), "a boolean", &mut errors);
-    check_type(&data, "KeepAlive", |v| matches!(v, PlistValue::Boolean(_)), "a boolean", &mut errors);
-    check_type(&data, "EnvironmentVariables", |v| matches!(v, PlistValue::Dict(_)), "a dictionary", &mut errors);
+    check_type(
+        &data,
+        "ProgramArguments",
+        |v| matches!(v, PlistValue::Array(_)),
+        "an array",
+        &mut errors,
+    );
+    check_type(
+        &data,
+        "StartInterval",
+        |v| matches!(v, PlistValue::Integer(_)),
+        "an integer",
+        &mut errors,
+    );
+    check_type(
+        &data,
+        "RunAtLoad",
+        |v| matches!(v, PlistValue::Boolean(_)),
+        "a boolean",
+        &mut errors,
+    );
+    check_type(
+        &data,
+        "KeepAlive",
+        |v| matches!(v, PlistValue::Boolean(_)),
+        "a boolean",
+        &mut errors,
+    );
+    check_type(
+        &data,
+        "EnvironmentVariables",
+        |v| matches!(v, PlistValue::Dict(_)),
+        "a dictionary",
+        &mut errors,
+    );
 
     Ok(errors)
 }
@@ -68,7 +98,11 @@ pub fn validate_plist(data: PlistDocument) -> Result<Vec<String>, AppError> {
 pub fn create_plist(data: PlistDocument) -> Result<String, AppError> {
     let label = match data.get("Label") {
         Some(PlistValue::String(s)) if !s.is_empty() => s.clone(),
-        _ => return Err(AppError::ConfigError("Label is required and must be a non-empty string".into())),
+        _ => {
+            return Err(AppError::ConfigError(
+                "Label is required and must be a non-empty string".into(),
+            ))
+        }
     };
 
     let home = dirs::home_dir()

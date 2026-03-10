@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+import type { JSX, MouseEvent } from "react";
 import { type ActionName, useServiceAction } from "../../hooks/useServiceAction";
 import { useTranslation } from "../../lib/i18n";
 import type { Service, ServiceStatus } from "../../lib/types";
